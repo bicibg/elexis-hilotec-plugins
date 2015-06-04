@@ -57,7 +57,7 @@ public class Preferences extends FieldEditorPreferencePage implements IWorkbench
 		addField(new BooleanFieldEditor(CFG_MK_INCSTOP,
 			"In Medikarte bis&mit Stoppdatum anzeigen?", getFieldEditorParent()));
 		addField(new BooleanFieldEditor(CFG_MK_DOS_DEZ,
-			"In Medikarte Dosierung in Dezimal eingeben?", getFieldEditorParent()));
+			"In Medikarte Dosierungsangaben in Dezimal erlauben?", getFieldEditorParent()));
 		addField(new IntegerFieldEditor(CFG_AKG_HEARTBEAT, "Archiv KG Heartbeat",
 			getFieldEditorParent()));
 		addField(new IntegerFieldEditor(CFG_AKG_SCROLLPERIOD, "Archiv KG Scroll Periode [ms]",

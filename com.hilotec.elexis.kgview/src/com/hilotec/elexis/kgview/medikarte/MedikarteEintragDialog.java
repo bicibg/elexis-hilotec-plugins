@@ -192,35 +192,30 @@ public class MedikarteEintragDialog extends TitleAreaDialog {
 				return false;
 			s = parts[1];
 		}
-		
-		
-		if (!Preferences.getMedikarteDosierungDecimal()) {
-			// Bruch-Dosierung parsen
-			if (s.matches("[0-9]+/[0-9]+")) {
-				String[] parts = s.split("/");
-				int z, n;
-				try {
-					z = Integer.parseInt(parts[0]);
-					n = Integer.parseInt(parts[1]);
-				} catch (NumberFormatException nfe) {
-					// Sollte nicht passieren nach Regex-Check oben.
+
+		//by default dosierung is set to be written in decimals
+		if (Preferences.getMedikarteDosierungDecimal()) {
+			if(s.matches("\\d+(\\.\\d+)?")){
+				try{
+					double d = Double.parseDouble(s);
+				}catch(NumberFormatException nfe){
 					return false;
 				}
-				return (z > 0) && (n > 0) && (n > z);
+				return true;
 			}
-		}else{
-			if(s.matches("\\d+(\\.\\d+)?"))
-			{
-				  try  
-				  {  
-				    double d = Double.parseDouble(s);  
-				  }  
-				  catch(NumberFormatException nfe)  
-				  {  
-				    return false;  
-				  }  
-				  return true; 
+		}
+		// Bruch-Dosierung parsen
+		if (s.matches("[0-9]+/[0-9]+")) {
+			String[] parts = s.split("/");
+			int z, n;
+			try {
+				z = Integer.parseInt(parts[0]);
+				n = Integer.parseInt(parts[1]);
+			} catch (NumberFormatException nfe) {
+				// Sollte nicht passieren nach Regex-Check oben.
+				return false;
 			}
+			return (z > 0) && (n > 0) && (n > z);
 		}
 		return false;
 	}
@@ -243,18 +238,16 @@ public class MedikarteEintragDialog extends TitleAreaDialog {
 			return false;
 		}
 	
-			// Format der Dosierungen pruefen
-			if (!validateDosierung(tDoMorgen.getText()) || !validateDosierung(tDoMittag.getText())
-				|| !validateDosierung(tDoAbend.getText()) || !validateDosierung(tDoNacht.getText())) {
-				setMessage("Fehler: Ungültige Dosierung. Erwarte nicht-negative "
-					+ "Ganzzahl, Bruch mit positivem, ganzzahligem Zähler "
-					+ "und Nenner, oder x für Einnahme gemäss separater " + "Verschreibungskarte.");
-				return false;
-			}
-		
+		// Format der Dosierungen pruefen
+		if (!validateDosierung(tDoMorgen.getText()) || !validateDosierung(tDoMittag.getText())
+			|| !validateDosierung(tDoAbend.getText()) || !validateDosierung(tDoNacht.getText())) {
+			setMessage("Fehler: Ungültige Dosierung. Erwarte nicht-negative "
+				+ "Ganzzahl, Bruch mit positivem, ganzzahligem Zähler "
+				+ "und Nenner, oder x für Einnahme gemäss separater " + "Verschreibungskarte.");
+			return false;
+		}
 		return true;
 	}
-	
 	@Override
 	public void okPressed(){
 		if (!validateInput())
