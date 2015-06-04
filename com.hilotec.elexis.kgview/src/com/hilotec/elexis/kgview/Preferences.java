@@ -25,6 +25,7 @@ public class Preferences extends FieldEditorPreferencePage implements IWorkbench
 	public static final String CFG_AKG_SCROLLPERIOD = "hilotec/kgview/archivkgscrollperiod";
 	public static final String CFG_AKG_SCROLLDIST_UP = "hilotec/kgview/archivkgscrolldistup";
 	public static final String CFG_AKG_SCROLLDIST_DOWN = "hilotec/kgview/archivkgscrolldistdown";
+	public static final String CFG_MK_DOS_DEZ = "hilotec/kgview/mkdezimaldosierung";
 	
 	static {
 		store = new SettingsPreferenceStore(CoreHub.mandantCfg);
@@ -32,6 +33,7 @@ public class Preferences extends FieldEditorPreferencePage implements IWorkbench
 		// Standardwerte setzten
 		store.setDefault(CFG_FLORDZ, false);
 		store.setDefault(CFG_MK_INCSTOP, false);
+		store.setDefault(CFG_MK_DOS_DEZ, true);
 		store.setDefault(CFG_AKG_HEARTBEAT, 10);
 		store.setDefault(CFG_AKG_SCROLLPERIOD, 200);
 		store.setDefault(CFG_AKG_SCROLLDIST_UP, 5);
@@ -54,6 +56,8 @@ public class Preferences extends FieldEditorPreferencePage implements IWorkbench
 			getFieldEditorParent()));
 		addField(new BooleanFieldEditor(CFG_MK_INCSTOP,
 			"In Medikarte bis&mit Stoppdatum anzeigen?", getFieldEditorParent()));
+		addField(new BooleanFieldEditor(CFG_MK_DOS_DEZ,
+			"In Medikarte Dosierung in Dezimal eingeben?", getFieldEditorParent()));
 		addField(new IntegerFieldEditor(CFG_AKG_HEARTBEAT, "Archiv KG Heartbeat",
 			getFieldEditorParent()));
 		addField(new IntegerFieldEditor(CFG_AKG_SCROLLPERIOD, "Archiv KG Scroll Periode [ms]",
@@ -86,6 +90,14 @@ public class Preferences extends FieldEditorPreferencePage implements IWorkbench
 	 */
 	public static boolean getMedikarteStopdatumInkl(){
 		return store.getBoolean(CFG_MK_INCSTOP);
+	}
+	
+	/**
+	 * 
+	 * @return Dosierung in decimal eingeben statt 1/2 1/4..etc
+	 */
+	public static boolean getMedikarteDosierungDecimal(){
+		return store.getBoolean(CFG_MK_DOS_DEZ);
 	}
 	
 	/**
