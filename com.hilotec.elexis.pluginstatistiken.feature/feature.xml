@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="com.hilotec.elexis.pluginstatistiken.feature"
+      label="Hilotec Messwerte Statistik"
+      version="3.0.0.qualifier"
+      provider-name="hilotec.com">
+
+   <description>
+      Statistikmodul zu Hilotec-Messwerte
+      Mehr Info unter http://wiki.elexis.info/com.hilotec.elexis.pluginstatistiken.feature.feature.group
+   </description>
+
+   <copyright url="http://elexis.info/de_contributers.html">
+     Gerry Weirich, 2007-2013 und viele andere
+   </copyright>
+
+   <license url="http://www.eclipse.org/legal/epl-v10.html">
+      Eclipse Public License v1.0
+   </license>
+
+   <plugin
+         id="com.hilotec.elexis.pluginstatistiken"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
