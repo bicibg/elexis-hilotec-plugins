@@ -168,6 +168,7 @@ public class MedikarteView extends ViewPart implements ElexisEventListener {
 				if (presc.isDeleted() || !presc.getEndDate().equals(""))
 					return;
 				new MedikarteStopDialog(getSite().getShell(), presc).open();
+				MkData md = new MkData(patient, "stopped");
 				refresh();
 			}
 		};
@@ -191,6 +192,7 @@ public class MedikarteView extends ViewPart implements ElexisEventListener {
 					+ "markierte Eintrag wirklich permanent gelöscht werden?"))
 					return;
 				presc.remove();
+				MkData md = new MkData(patient, "deleted");
 				refresh();
 			}
 		};

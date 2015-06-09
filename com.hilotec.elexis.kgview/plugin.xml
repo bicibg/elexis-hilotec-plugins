@@ -214,6 +214,10 @@
             name="KonsData">
       </Factory>
       <Factory
+            Class="com.hilotec.elexis.kgview.medikarte.MkDataFactory"
+            name="MkData">
+      </Factory>
+      <Factory
             Class="com.hilotec.elexis.kgview.data.FavMedikamentFactory"
             name="FavMedikament">
       </Factory>

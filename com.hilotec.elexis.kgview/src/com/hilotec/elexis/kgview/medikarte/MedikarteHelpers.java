@@ -81,18 +81,8 @@ public class MedikarteHelpers {
 	 */
 	public static String medikarteDatum(Patient patient)
 	{
-		// TODO: Koennte man mit einer Query sauberer loesen
-		List<Prescription> medis = medikarteMedikation(patient, false);
-		TimeTool max = new TimeTool(0);
-		TimeTool cur = new TimeTool();
-		for (Prescription p: medis) {
-			cur.set(p.getBeginDate());
-			if (cur.isAfter(max)) max.set(p.getBeginDate());
-			cur.set(p.getEndDate());
-			if (cur.isAfter(max)) max.set(p.getEndDate());
-		}
-		
-		return max.toString(TimeTool.DATE_GER);
+		MkData md = MkData.load(patient);
+		return md.getLastEdited(); 
 	}
 	
 	/**
