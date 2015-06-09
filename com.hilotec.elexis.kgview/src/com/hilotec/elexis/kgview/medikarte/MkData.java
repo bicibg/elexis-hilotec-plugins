@@ -17,8 +17,6 @@ public class MkData extends PersistentObject {
 	public static final String FLD_AUTOR = "Autor";
 	public static final String INFO = "Info";
 
-	private static org.slf4j.Logger log=LoggerFactory.getLogger(MkData.class);
-
 	static {
 		addMapping(TABLENAME, "PatientID", "LastEdited", "Autor", "Info");
 		checkTable();
@@ -57,7 +55,6 @@ public class MkData extends PersistentObject {
 			MkData md = new MkData(id);
 			md.setLastEdited(new TimeTool().toString(TimeTool.DATE_GER));
 		}else{
-			log.debug("no id" +id);
 			create(null);
 			try{
 				set(new String[] {
