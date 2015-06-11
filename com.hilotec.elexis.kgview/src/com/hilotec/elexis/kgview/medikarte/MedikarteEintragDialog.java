@@ -282,8 +282,9 @@ public class MedikarteEintragDialog extends TitleAreaDialog {
 				presc.setEndDate(tVon.getText());
 			}
 		}
-
-		MkData md = new MkData(pat, "edited");
+		MkData md = MkData.load(pat);
+		md.setLastEdited(new TimeTool().toString(TimeTool.DATE_GER));
+		md.setLastAction("edited");
 		presc = new Prescription(fm.getArtikel(), pat, dosierung, bemerkung);
 		presc.setBeginDate(tVon.getText());
 		presc.setEndDate(tBis.getText());
@@ -292,3 +293,4 @@ public class MedikarteEintragDialog extends TitleAreaDialog {
 		close();
 	}
 }
+

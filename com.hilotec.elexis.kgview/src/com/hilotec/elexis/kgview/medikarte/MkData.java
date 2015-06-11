@@ -1,6 +1,8 @@
 package com.hilotec.elexis.kgview.medikarte;
 
+import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.data.Anwender;
+import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Prescription;
@@ -14,11 +16,11 @@ public class MkData extends PersistentObject {
 	private static final String TABLENAME = "COM_HILOTEC_ELEXIS_KGVIEW_MKDATA";
 	public static final String PATIENT_ID = "PatientID";
 	public static final String LAST_EDITED = "LastEdited";
-	public static final String FLD_AUTOR = "Autor";
-	public static final String INFO = "Info";
+	public static final String FLD_AUTHOR = "Author";
+	public static final String LAST_ACTION = "LastAction";
 
 	static {
-		addMapping(TABLENAME, "PatientID", "LastEdited", "Autor", "Info");
+		addMapping(TABLENAME, "PatientID", "LastEdited", "Author", "LastAction");
 		checkTable();
 	}
 	
@@ -28,9 +30,9 @@ public class MkData extends PersistentObject {
 		+ "  deleted		CHAR(1) DEFAULT '0', " 
 		+ "  PatientID		VARCHAR(25), " 
 		+ "  LastEdited 	TEXT, "
-	    + "  Autor          VARCHAR(25),  " 
-		+ "  Info			TEXT); "
-	    + "	 INSERT INTO " + TABLENAME + " (ID, Info, PatientID) VALUES ('VERSION', '"+ VERSION +"', 'VERSION');";
+	    + "  Author          VARCHAR(25),  " 
+		+ "  LastAction			TEXT); "
+	    + "	 INSERT INTO " + TABLENAME + " (ID, LastAction, PatientID) VALUES ('VERSION', '"+ VERSION +"', 'VERSION');";
 	
 	private static void checkTable(){
 		
@@ -38,7 +40,7 @@ public class MkData extends PersistentObject {
 		try {
 			fm =
 				getConnection().queryString(
-					"SELECT Info FROM " + TABLENAME + " WHERE ID='VERSION';");
+					"SELECT LastAction FROM " + TABLENAME + " WHERE ID='VERSION';");
 		} catch (Exception e) {}
 		
 		if (fm == null) {
@@ -47,7 +49,7 @@ public class MkData extends PersistentObject {
 	}
 	
 	
-	public MkData(Patient p, String info){
+	public MkData(Patient p){
 		String id =	getConnection().queryString(
 					"SELECT ID FROM " + TABLENAME + " WHERE PatientID='" + p.getId() + "';"
 					);
@@ -58,8 +60,9 @@ public class MkData extends PersistentObject {
 			create(null);
 			try{
 				set(new String[] {
-					PATIENT_ID, LAST_EDITED, INFO, 
-				}, p.getId(), new TimeTool().toString(TimeTool.DATE_GER), info);
+					PATIENT_ID, LAST_EDITED 
+				}, p.getId(), new TimeTool().toString(TimeTool.DATE_GER));
+				setAuthor();
 			}catch(Exception e){}
 		}
 	}
@@ -94,8 +97,9 @@ public class MkData extends PersistentObject {
 				cur.set(p1.getEndDate());
 				if (cur.isAfter(max)) max.set(p1.getEndDate());
 			}
-			MkData md = new MkData(p, "");
+			MkData md = new MkData(p);
 			md.setLastEdited(max.toString(TimeTool.DATE_GER));
+			md.setLastAction("added old data");
 			return MkData.load(p);
 
 		}
@@ -127,8 +131,8 @@ public class MkData extends PersistentObject {
 		return null;
 	}
 	
-	public Anwender getAutor(){
-		String id = get(FLD_AUTOR);
+	public Anwender getAuthor(){
+		String id = get(FLD_AUTHOR);
 		if (!StringTool.isNothing(id)) {
 			Anwender aw = Anwender.load(id);
 			return aw;
@@ -138,19 +142,22 @@ public class MkData extends PersistentObject {
 	
 	public void setLastEdited(String txt){
 		set(LAST_EDITED, txt);
+		setAuthor();
 	}
 	
-	public void setAutor(Anwender anw){
-		String id = "";
-		if (anw != null)
-			id = anw.getId();
-		set(FLD_AUTOR, id);
+	public void setAuthor(){
+        Mandant mandant = (Mandant) ElexisEventDispatcher.getSelected(Mandant.class);
+		set(FLD_AUTHOR, mandant.getId());
+	}
+	
+	public void setLastAction(String text){
+		set(LAST_ACTION, text);
 	}
 	
 	
 	/**
-	 * Wir ueberschreiben hier set() um sicherzustellen dass nur der Autor einen KG-Eintrag anpassen
-	 * kann, und um den Autor festzuhalten falls das noch nicht geschehen ist.
+	 * Wir ueberschreiben hier set() um sicherzustellen dass nur der Author einen KG-Eintrag anpassen
+	 * kann, und um den Author festzuhalten falls das noch nicht geschehen ist.
 	 */
 	@Override
 	public boolean set(final String field, String value){
@@ -163,4 +170,5 @@ public class MkData extends PersistentObject {
 		return true;
 	}
 }
+
 

@@ -34,6 +34,7 @@ import ch.elexis.data.Konsultation;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
 import ch.elexis.data.Prescription;
+import ch.rgw.tools.TimeTool;
 
 import com.hilotec.elexis.kgview.data.FavMedikament;
 import com.hilotec.elexis.kgview.medikarte.MedikarteEintragComparator.Sortierung;
@@ -168,7 +169,9 @@ public class MedikarteView extends ViewPart implements ElexisEventListener {
 				if (presc.isDeleted() || !presc.getEndDate().equals(""))
 					return;
 				new MedikarteStopDialog(getSite().getShell(), presc).open();
-				MkData md = new MkData(patient, "stopped");
+				MkData md = MkData.load(patient);
+				md.setLastEdited(new TimeTool().toString(TimeTool.DATE_GER));
+				md.setLastAction("stopped");
 				refresh();
 			}
 		};
@@ -192,7 +195,9 @@ public class MedikarteView extends ViewPart implements ElexisEventListener {
 					+ "markierte Eintrag wirklich permanent gelöscht werden?"))
 					return;
 				presc.remove();
-				MkData md = new MkData(patient, "deleted");
+				MkData md = MkData.load(patient);
+				md.setLastEdited(new TimeTool().toString(TimeTool.DATE_GER));
+				md.setLastAction("deleted");
 				refresh();
 			}
 		};
@@ -357,3 +362,4 @@ public class MedikarteView extends ViewPart implements ElexisEventListener {
 		return eetmpl;
 	}
 }
+
